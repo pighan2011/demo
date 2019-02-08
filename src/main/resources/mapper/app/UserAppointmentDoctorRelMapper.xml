@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.dao.app.UserAppointmentDoctorRelDao">
+
+    <select id="get" resultType="UserAppointmentDoctorRelDO">
+        select *
+        from app_user_appointment_doctor_rel
+        where id = #{value}
+    </select>
+
+    <select id="list" resultType="UserAppointmentDoctorRelDO">
+        select *,(select  adc.name from app_diagnosis_card adc where adc.id=auadr.diagnosis_id) diagnosisName
+        <if test="historyFlag!=null">
+            ,(select sd.name from  sys_dept sd where sd.dept_id=#{historyFlag}) hospitalName
+        </if>
+        from app_user_appointment_doctor_rel auadr
+        <where>
+            <if test="id != null and id != ''">and id =
+                #{id}
+            </if>
+            <if test="currentUserId != null and currentUserId != ''">and diagnosis_id in
+                (select id
+                from app_diagnosis_card where user_id=#{currentUserId})
+            </if>
+            <if test="userId != null and userId != ''">and user_id =
+                #{userId}
+            </if>
+
+
+            <if test="transactionId != null and transactionId != ''">and transaction_id =
+                #{transactionId}
+            </if>
+            <if test="nonceStr != null and nonceStr != ''">and nonce_str =
+                #{nonceStr}
+            </if>
+            <if test="outTradeNo != null and outTradeNo != ''">and out_trade_no =
+                #{outTradeNo}
+            </if>
+
+            <if test="payType != null and payType != ''">and pay_type =
+                #{payType}
+            </if>
+
+
+            <if test="historyFlag != null and historyFlag != ''">
+            and dept_id in(
+                select dept_id
+                from sys_dept where parent_id=#{historyFlag}
+                union all
+                select dept_id
+                from sys_dept where parent_id in (select dept_id
+                from sys_dept where parent_id=#{historyFlag})
+
+                )
+            </if>
+
+
+            <if test="diagnosisId != null and diagnosisId != ''">and diagnosis_id =
+                #{diagnosisId}
+            </if>
+            <if test="deptId != null and deptId != ''">and dept_id =
+                #{deptId}
+            </if>
+            <if test="deptName != null and deptName != '' and deptName != '%%'">
+                and dept_name like #{deptName}
+            </if>
+            <if test="price != null and price != ''">and price =
+                #{price}
+            </if>
+            <if test="name != null and name != '' and name != '%%'">
+                and name like #{name}
+            </if>
+            <if test="appointmentTime != null and appointmentTime != ''">and appointment_time =
+                #{appointmentTime}
+            </if>
+            <if test="createDate != null and createDate != ''">and create_date =
+                #{createDate}
+            </if>
+            <if test="doctorId != null and doctorId != ''">and doctor_id =
+                #{doctorId}
+            </if>
+            <if test="doctorName != null and doctorName != '' and doctorName != '%%'">
+                and doctor_name like #{doctorName}
+            </if>
+            <if test="status != null and status != ''">and status =
+                #{status}
+            </if>
+            <if test="showFlag != null and showFlag != ''">and show_flag =
+                #{showFlag}
+            </if>
+        </where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+            <otherwise>
+                order by id desc
+            </otherwise>
+        </choose>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="count" resultType="int">
+        select count(*) from app_user_appointment_doctor_rel
+        <where>
+            <if test="id != null and id != ''">and id =
+                #{id}
+            </if>
+            <if test="userId != null and userId != ''">and user_id =
+                #{userId}
+            </if>
+            <if test="diagnosisId != null and diagnosisId != ''">and diagnosis_id =
+                #{diagnosisId}
+            </if>
+            <if test="deptId != null and deptId != ''">and dept_id =
+                #{deptId}
+            </if>
+            <if test="deptName != null and deptName != '' and deptName != '%%'">
+                and dept_name like #{deptName}
+            </if>
+            <if test="price != null and price != ''">and price =
+                #{price}
+            </if>
+            <if test="name != null and name != '' and name != '%%'">
+                and name like #{name}
+            </if>
+            <if test="appointmentTime != null and appointmentTime != ''">and appointment_time =
+                #{appointmentTime}
+            </if>
+            <if test="createDate != null and createDate != ''">and create_date =
+                #{createDate}
+            </if>
+            <if test="doctorId != null and doctorId != ''">and doctor_id =
+                #{doctorId}
+            </if>
+            <if test="doctorName != null and doctorName != '' and doctorName != '%%'">
+                and doctor_name like #{doctorName}
+            </if>
+            <if test="status != null and status != ''">and status =
+                #{status}
+            </if>
+        </where>
+    </select>
+
+    <insert id="save" parameterType="UserAppointmentDoctorRelDO" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into app_user_appointment_doctor_rel (`user_id`,
+                                                     `diagnosis_id`,
+                                                     `dept_id`,
+                                                     `dept_name`,
+                                                     `price`,
+                                                     `name`,
+                                                     `appointment_time`,
+                                                     `create_date`,
+                                                     `doctor_id`,
+                                                     `doctor_name`,
+                                                     `status`,
+                                                     show_flag,
+                                                     transaction_id,
+                                                     nonce_str,
+                                                     out_trade_no,
+                                                     pay_type)
+        values (#{userId},
+                #{diagnosisId},
+                #{deptId},
+                #{deptName},
+                #{price},
+                #{name},
+                #{appointmentTime},
+                #{createDate},
+                #{doctorId},
+                #{doctorName},
+                #{status},
+                #{showFlag},
+                #{transactionId},
+                #{nonceStr},
+                #{outTradeNo},
+                #{payType})
+    </insert>
+
+    <update id="update" parameterType="UserAppointmentDoctorRelDO">
+        update app_user_appointment_doctor_rel
+        <set>
+            <if test="userId != null">`user_id` = #{userId
+                        },
+            </if>
+            <if test="diagnosisId != null">`diagnosis_id` = #{diagnosisId
+                        },
+            </if>
+            <if test="showFlag != null">`show_flag` = #{showFlag
+                        },
+            </if>
+            <if test="deptId != null">`dept_id` = #{deptId
+                        },
+            </if>
+            <if test="deptName != null">`dept_name` = #{deptName
+                        },
+            </if>
+            <if test="price != null">`price` = #{price
+                        },
+            </if>
+            <if test="name != null">`name` = #{name
+                        },
+            </if>
+            <if test="appointmentTime != null">`appointment_time` = #{appointmentTime
+                        },
+            </if>
+            <if test="createDate != null">`create_date` = #{createDate
+                        },
+            </if>
+            <if test="doctorId != null">`doctor_id` = #{doctorId
+                        },
+            </if>
+            <if test="doctorName != null">`doctor_name` = #{doctorName
+                        },
+            </if>
+            <if test="status != null">`status` = #{status
+                        },
+            </if>
+            <if test="transactionId != null">`transaction_id` = #{transactionId
+                        },
+            </if>
+            <if test="nonceStr != null">`nonce_str` = #{nonceStr
+                        },
+            </if>
+            <if test="payType != null">`pay_type` = #{payType
+                        },
+            </if>
+            <if test="outTradeNo != null">`out_trade_no` = #{outTradeNo
+                        }
+            </if>
+
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="remove">
+        delete
+        from app_user_appointment_doctor_rel
+        where id = #{value}
+    </delete>
+
+    <delete id="batchRemove">
+        delete from app_user_appointment_doctor_rel where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+    <select id="waitUserList" resultType="UserAppointmentDoctorRelDO">
+        select adc.id,adc.name, adc.age, adc.sex, auadr.name check_name, auadr.price,id_card,medicare
+        from app_user_appointment_doctor_rel auadr
+        inner join app_diagnosis_card adc on adc.id = auadr.diagnosis_id
+        <where>
+            <if test="doctorId!=null">and doctor_id = #{doctorId}</if>
+            <if test="status!=null">and auadr.status = #{status}
+            </if>
+            <if test="appointmentTime!=null">and appointment_time=#{appointmentTime}</if>
+            <if test="name!=null and name!='%%'">and adc.name like #{name}</if>
+        </where>
+        order by auadr.id asc
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+    <select id="waitUserListCount" resultType="int">
+        select count(*)
+        from app_user_appointment_doctor_rel auadr
+        inner join app_diagnosis_card adc on adc.id = auadr.diagnosis_id
+        <where>
+            <if test="doctorId!=null">and doctor_id = #{doctorId}</if>
+            <if test="status!=null">and auadr.status = #{status}
+            </if>
+            <if test="appointmentTime!=null">and appointment_time=#{appointmentTime}</if>
+            <if test="name!=null and name!='%%'">and adc.name like #{name}</if>
+        </where>
+    </select>
+</mapper>

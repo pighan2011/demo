@@ -1,0 +1,45 @@
+## 数据源配置
+mobile:
+  uploadPath: E:/upload
+  imgHttp: http://192.168.1.22:4399/
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/remedy?useUnicode=true&characterEncoding=utf8
+    username: root
+    password: root
+    initial-size: 5
+    minIdle: 1
+    maxActive: 50
+    maxWait: 60000
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: SELECT 1 FROM DUAL
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: false
+    filters: stat,wall,log4j
+    connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+    useGlobalDataSourceStat: true
+  redis:
+   host: 127.0.0.1
+   port: 6379
+
+wx:
+  pay:
+    appId: wx4f074ad4a6c47542
+    mchId: 1521826181
+    mchKey: qwertyuiopasdfghjklzxcvbnm123456
+    keyPath: classpath:wxpay/apiclient_cert.p12
+    subAppId: #服务商模式下的子商户公众账号ID
+    subMchId: #服务商模式下的子商户号
+    notifyUrl: http://60.205.216.68:8080
+alipay:
+  gatewayUrl: https://openapi.alipaydev.com/gateway.do
+  appid: 2016092300575342
+  appPrivateKey: MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQD0Imc8ZhC0eaRqPvHbFlU09oJPsi+J2JYqK0WDRuz8Ue6gwGWcssEilw+ta3p/jNVDE/VAyrW3vPZXurGGUumPsBFUGjMoeD88xNB3EkvOyq0GK+79RkYERCxBrSpBN6KdDbp4zjq2pVs2rpEjiAHHrMiIESuX7+YWqnyFCBL+hCjA+UeCQE3Sp59/MdMvnbVUxpfjTRWCiFeFaZon8zkFGW3ahHpG9lef6UxeVnESqW58OHeeZt+mIOtOXqSC9nuhpRVt3euzQj0qK9x2v61qKoCuFPiD2G/VYj6LPIjnrNmDto/FXUgB8jBmYtkOxSPiZG6NxNQ5yT9DNMJgvUlXAgMBAAECggEAHGw89K01WK2o1K3LXqR0+xuQBFNMcZIDuZkcGLKTOLUZQSHlMp8lGS/ZJWmT83GkCpEyRn7TNTcMvx3/ORJCGvZ2rgH23slRI3QOiS5aIRM7nbJTuq0JzclaFbNhbgJaLkrA4Puxnj4WJoGgaDCXdHXLSvwkxSWq9gyXPq23+GWUV/tXQ5p8wfmWNJI+rlQUPFjzaElk7S5i/vsdG+r2J9FFxe65oTHiw4JjogLggC13gKLgTaYx43uCkqTNFaKjTIwXooQyc7BWHF5MF71eLXf4E9k9doWXLlztkXRW9RHzODhvfTu5YKvFJF0c1BvBtH9q+vlW9gUpoOVeddDFQQKBgQD/AxVojXWDs4aysVs43UgGfJQ6E5VczDbsIYLhq02MZIGh6OacYxYCmCV/PlbNf5Y9W43F81uwKFeETcjmj7AvzARNZBV961oGqw8Ns0pNfs/8gszWltTB/W5Q1qs2etraYYbBvOO0aatTN1LYh6jIToHksw57Hb7mWBWkrnPr5wKBgQD1FIgIDxrmJ8X+YT/p0fCsWO26Tj9/lneHQmm0KFzdUX9AIHAvFo5EEsxaKcdSaTQVV+FaFJSyOEmipvSisQ1+yxz744ofz3adAdEIRR7hiQq+0ty5DQ30tNqh/+2TVYFC5wNTLXmwtFrMzluWdpVrNEqzYNduq9bS1/asllSJEQKBgQDT/etBJD+pwYdba2brKcEja1MJyJflMfsCZ4VXNsHb0P2W7HcxUInOlE6vrdIZOVRbI44DHiB9m7vNR6CYUqDjyxVUhLv9FrabTn7QI9jD/YTHZLEGPxMVRSn818gzHQRsgKC20+DzbNi48AfV60ibY/BFf7itDnhRIq6zXTcOxwKBgHB6kcwREqlay7Xp8Clh3vFahxCgZOgrqIP9aQH0HFq+0oYd3R7fXT/E2ODwl7gs7Gh3QsfS9kOtLa5mrZQVajotAgpg7b2Xu7pnYQZIotmjybi2kfKkGSmb71O2X9Tkw0RvPclo75a3z4x7kPFHT2A6SaZ15am3WArAb0faXsXhAoGAft93+sU4molmBX0toDf/+0xZEocs8sfqgtQ1pe2+mIuJt0ver+49VzUorrFScaK4/2V5+nuTegucPyqRV2A47SFaQSKIvCpV+qBX3DJbxTxwLnKoDpH5hDZ3u2dqEyn5Ay4IGdU/4StPkSWbkomXhJalK4mXULQENhNptCAUSu8=
+  alipayPublicKey: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAsyzaVS9tCoQV2G6nQ3yiqqXYATN+KSK9Dr8NqamdOUrZcRCe7dUQ3upN7yMIPRMNDd4h2IcJj8WCMhndkQRIIMbweBYdE2+PTsPPK74N8tjOrZTWtprB+vRMjDqvCu/6w1b12P/MCIzeL3gu0UAZh13RkFt42FoqcDrT6YT7IebROP/yBv8wQwnlmxyZ+ni03nn6IJBmp5C/U3055i79DsMvv09ICzNTNuz5t1xe25VGF08gGzj76MwlQ2qm1eWam3G+yYYi06BxJ5A52mjZ2DrEO3m08aSgCCUdH4LN3tGULnrA1pD6V/+kjPgCttrMSPjEEFmQsWhnNCCwp0v6KwIDAQAB
+  returnUrl: http://www.baidu.com
+  notifyUrl: http://60.205.216.68:8080

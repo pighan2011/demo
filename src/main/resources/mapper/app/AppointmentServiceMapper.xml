@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.dao.app.AppointmentServiceDao">
+
+    <select id="get" resultType="AppointmentServiceDO">
+        select *
+        from app_appointment_service
+        where id = #{value}
+    </select>
+
+    <select id="list" resultType="AppointmentServiceDO">
+        select *,
+        (select avs.vs_name from app_volunteer_service avs where avs.id=app_appointment_service.id) vs_name
+         from
+        app_appointment_service
+        <where>
+            <if test="id != null and id != ''">and id =
+                #{id}
+            </if>
+            <if test="vsId != null and vsId != ''">and vs_id =
+                #{vsId}
+            </if>
+            <if test="userId != null and userId != ''">and user_id =
+                #{userId}
+            </if>
+            <if test="name != null and name != '' and name != '%%'">
+                and name like #{name}
+            </if>
+            <if test="appotionmentTime != null and appotionmentTime != ''">and appotionment_time =
+                #{appotionmentTime}
+            </if>
+            <if test="address != null and address != ''">and address =
+                #{address}
+            </if>
+            <if test="idCard != null and idCard != ''">and id_card =
+                #{idCard}
+            </if>
+            <if test="remark != null and remark != ''">and remark =
+                #{remark}
+            </if>
+            <if test="status != null and status != ''">and status =
+                #{status}
+            </if>
+
+            <if test="transactionId != null and transactionId != ''">and transaction_id =
+                #{transactionId}
+            </if>
+            <if test="nonceStr != null and nonceStr != ''">and nonce_str =
+                #{nonceStr}
+            </if>
+            <if test="outTradeNo != null and outTradeNo != ''">and out_trade_no =
+                #{outTradeNo}
+            </if>
+
+            <if test="payType != null and payType != ''">and pay_type =
+                #{payType}
+            </if>
+        </where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+            <otherwise>
+                order by id desc
+            </otherwise>
+        </choose>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="count" resultType="int">
+        select count(*) from app_appointment_service
+        <where>
+            <if test="id != null and id != ''">and id =
+                #{id}
+            </if>
+            <if test="vsId != null and vsId != ''">and vs_id =
+                #{vsId}
+            </if>
+            <if test="userId != null and userId != ''">and user_id =
+                #{userId}
+            </if>
+            <if test="name != null and name != '' and name != '%%'">
+                and name like #{name}
+            </if>
+            <if test="appotionmentTime != null and appotionmentTime != ''">and appotionment_time =
+                #{appotionmentTime}
+            </if>
+            <if test="address != null and address != ''">and address =
+                #{address}
+            </if>
+            <if test="idCard != null and idCard != ''">and id_card =
+                #{idCard}
+            </if>
+            <if test="remark != null and remark != ''">and remark =
+                #{remark}
+            </if>
+            <if test="status != null and status != ''">and status =
+                #{status}
+            </if>
+        </where>
+    </select>
+
+    <insert id="save" parameterType="AppointmentServiceDO" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into app_appointment_service (`vs_id`,
+                                             `user_id`,
+                                             `name`,
+                                             `appotionment_time`,
+                                             `address`,
+                                             `id_card`,
+                                             `remark`,
+                                             `status`,
+                                             transaction_id,
+                                             nonce_str,
+                                             out_trade_no,
+                                             pay_type)
+        values (#{vsId}, #{userId}, #{name}, #{appotionmentTime}, #{address}, #{idCard}, #{remark}, #{status},
+                #{transactionId},
+                #{nonceStr},
+                #{outTradeNo},
+                #{payType})
+    </insert>
+
+    <update id="update" parameterType="AppointmentServiceDO">
+        update app_appointment_service
+        <set>
+            <if test="vsId != null">`vs_id` = #{vsId
+                        },
+            </if>
+            <if test="userId != null">`user_id` = #{userId
+                        },
+            </if>
+            <if test="name != null">`name` = #{name
+                        },
+            </if>
+            <if test="appotionmentTime != null">`appotionment_time` = #{appotionmentTime
+                        },
+            </if>
+            <if test="address != null">`address` = #{address
+                        },
+            </if>
+            <if test="idCard != null">`id_card` = #{idCard
+                        },
+            </if>
+            <if test="remark != null">`remark` = #{remark
+                        },
+            </if>
+            <if test="status != null">`status` = #{status
+                        },
+            </if>
+
+            <if test="transactionId != null">`transaction_id` = #{transactionId
+                        },
+            </if>
+            <if test="nonceStr != null">`nonce_str` = #{nonceStr
+                        },
+            </if>
+            <if test="payType != null">`pay_type` = #{payType
+                        },
+            </if>
+            <if test="outTradeNo != null">`out_trade_no` = #{outTradeNo
+                        }
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="remove">
+        delete
+        from app_appointment_service
+        where id = #{value}
+    </delete>
+
+    <delete id="batchRemove">
+        delete from app_appointment_service where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+<select id="asList" resultType="AppointmentServiceDO">
+    select aiu.user_name  ,avs.vs_name,aas.appotionment_time,avs.vs_class,
+           (select sd.name from sys_dept sd where sd.dept_id=avs.dept_id) dept_name,
+           avs.price,aas.status
+    from app_appointment_service aas inner join
+         app_volunteer_service avs on avs.id=aas.vs_id
+                                     inner join app_invalid_user aiu on aiu.id=aas.user_id
+    where aas.user_id=#{userId}
+
+</select>
+</mapper>

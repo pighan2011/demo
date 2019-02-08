@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.dao.app.UserEvaluationDao">
+
+    <select id="get" resultType="UserEvaluationDO">
+        select `id`, `user_id`, `diagnosis_id`, `message`, `create_date`,dept_id
+        from app_user_evaluation
+        where id = #{value}
+    </select>
+
+    <select id="list" resultType="UserEvaluationDO">
+        select dept_id, `id`,`user_id`,`diagnosis_id`,`message`,`create_date` from app_user_evaluation
+        <where>
+            <if test="id != null and id != ''">and id =
+                #{id}
+            </if>
+            <if test="deptId != null and id != ''">and dept_id =
+                #{deptId}
+            </if>
+            <if test="userId != null and userId != ''">and user_id =
+                #{userId}
+            </if>
+            <if test="diagnosisId != null and diagnosisId != ''">and diagnosis_id =
+                #{diagnosisId}
+            </if>
+            <if test="message != null and message != ''">and message =
+                #{message}
+            </if>
+            <if test="createDate != null and createDate != ''">and create_date =
+                #{createDate}
+            </if>
+        </where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+            <otherwise>
+                order by id desc
+            </otherwise>
+        </choose>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="count" resultType="int">
+        select count(*) from app_user_evaluation
+        <where>
+            <if test="id != null and id != ''">and id =
+                #{id}
+            </if>
+            <if test="userId != null and userId != ''">and user_id =
+                #{userId}
+            </if>
+            <if test="diagnosisId != null and diagnosisId != ''">and diagnosis_id =
+                #{diagnosisId}
+            </if>
+            <if test="message != null and message != ''">and message =
+                #{message}
+            </if>
+            <if test="createDate != null and createDate != ''">and create_date =
+                #{createDate}
+            </if>
+        </where>
+    </select>
+
+    <insert id="save" parameterType="UserEvaluationDO" useGeneratedKeys="true" keyProperty="id">
+        insert into app_user_evaluation (`user_id`, `diagnosis_id`, `message`, `create_date`)
+        values (#{userId}, #{diagnosisId}, #{message}, #{createDate})
+    </insert>
+
+    <update id="update" parameterType="UserEvaluationDO">
+        update app_user_evaluation
+        <set>
+            <if test="userId != null">`user_id` = #{userId
+                        },
+            </if>
+            <if test="deptId != null">`dept_id` = #{deptId
+                        },
+            </if>
+            <if test="diagnosisId != null">`diagnosis_id` = #{diagnosisId
+                        },
+            </if>
+            <if test="message != null">`message` = #{message
+                        },
+            </if>
+            <if test="createDate != null">`create_date` = #{createDate
+                        }
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="remove">
+        delete
+        from app_user_evaluation
+        where id = #{value}
+    </delete>
+
+    <delete id="batchRemove">
+        delete from app_user_evaluation where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

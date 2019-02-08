@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.dao.app.OutHospitalDao">
+
+    <select id="get" resultType="OutHospitalDO">
+        select `id`,
+               `diagnosis_id`,
+               `dept_id`,
+               `dept_name`,
+               `room_no`,
+               `bed_no`,
+               `in_date`,
+               `out_date`,
+               `cause`,
+               `status`
+        from app_out_hospital
+        where id = #{value}
+    </select>
+
+    <select id="list" resultType="OutHospitalDO">
+        select `id`,`diagnosis_id`,`dept_id`,`dept_name`,`room_no`,`bed_no`,`in_date`,`out_date`,`cause`,`status` from
+        app_out_hospital
+        <where>
+            <if test="id != null and id != ''">and id =
+                #{id}
+            </if>
+            <if test="diagnosisId != null and diagnosisId != ''">and diagnosis_id =
+                #{diagnosisId}
+            </if>
+            <if test="deptId != null and deptId != ''">and dept_id =
+                #{deptId}
+            </if>
+            <if test="deptName != null and deptName != '' and deptName != '%%'">
+                and dept_name like #{deptName}
+            </if>
+            <if test="roomNo != null and roomNo != ''">and room_no =
+                #{roomNo}
+            </if>
+            <if test="bedNo != null and bedNo != ''">and bed_no =
+                #{bedNo}
+            </if>
+            <if test="inDate != null and inDate != ''">and in_date =
+                #{inDate}
+            </if>
+            <if test="outDate != null and outDate != ''">and out_date =
+                #{outDate}
+            </if>
+            <if test="cause != null and cause != ''">and cause =
+                #{cause}
+            </if>
+            <if test="status != null and status != ''">and status =
+                #{status}
+            </if>
+        </where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+            <otherwise>
+                order by id desc
+            </otherwise>
+        </choose>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="count" resultType="int">
+        select count(*) from app_out_hospital
+        <where>
+            <if test="id != null and id != ''">and id =
+                #{id}
+            </if>
+            <if test="diagnosisId != null and diagnosisId != ''">and diagnosis_id =
+                #{diagnosisId}
+            </if>
+            <if test="deptId != null and deptId != ''">and dept_id =
+                #{deptId}
+            </if>
+            <if test="deptName != null and deptName != '' and deptName != '%%'">
+                and dept_name like #{deptName}
+            </if>
+            <if test="roomNo != null and roomNo != ''">and room_no =
+                #{roomNo}
+            </if>
+            <if test="bedNo != null and bedNo != ''">and bed_no =
+                #{bedNo}
+            </if>
+            <if test="inDate != null and inDate != ''">and in_date =
+                #{inDate}
+            </if>
+            <if test="outDate != null and outDate != ''">and out_date =
+                #{outDate}
+            </if>
+            <if test="cause != null and cause != ''">and cause =
+                #{cause}
+            </if>
+            <if test="status != null and status != ''">and status =
+                #{status}
+            </if>
+        </where>
+    </select>
+
+    <insert id="save" parameterType="OutHospitalDO" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into app_out_hospital
+        (`id`,
+         `diagnosis_id`,
+         `dept_id`,
+         `dept_name`,
+         `room_no`,
+         `bed_no`,
+         `in_date`,
+         `out_date`,
+         `cause`,
+         `status`)
+        values (#{id},
+                #{diagnosisId},
+                #{deptId},
+                #{deptName},
+                #{roomNo},
+                #{bedNo},
+                #{inDate},
+                #{outDate},
+                #{cause},
+                #{status})
+    </insert>
+
+    <update id="update" parameterType="OutHospitalDO">
+        update app_out_hospital
+        <set>
+            <if test="diagnosisId != null">`diagnosis_id` = #{diagnosisId
+                        },
+            </if>
+            <if test="deptId != null">`dept_id` = #{deptId
+                        },
+            </if>
+            <if test="deptName != null">`dept_name` = #{deptName
+                        },
+            </if>
+            <if test="roomNo != null">`room_no` = #{roomNo
+                        },
+            </if>
+            <if test="bedNo != null">`bed_no` = #{bedNo
+                        },
+            </if>
+            <if test="inDate != null">`in_date` = #{inDate
+                        },
+            </if>
+            <if test="outDate != null">`out_date` = #{outDate
+                        },
+            </if>
+            <if test="cause != null">`cause` = #{cause
+                        },
+            </if>
+            <if test="status != null">`status` = #{status
+                        }
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="remove">
+        delete
+        from app_out_hospital
+        where id = #{value}
+    </delete>
+
+    <delete id="batchRemove">
+        delete from app_out_hospital where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

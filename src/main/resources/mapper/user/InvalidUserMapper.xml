@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.dao.user.InvalidUserDao">
+
+    <select id="get" resultType="com.bootdo.vo.InvalidUserDO">
+        select `id`,
+               `pic_id`,
+               `user_name`,
+               `phone`,
+               `password`,
+               `open_id`,
+               `ry_token`,
+               `address`,
+               id_card,
+               sex,name
+        from app_invalid_user
+        where id = #{value}
+    </select>
+    <select id="getUserByPhone" resultType="InvalidUserDO">
+        select `id`,
+               `pic_id`,
+               `user_name`,
+               `phone`,
+               `password`,
+               `open_id`,
+               `ry_token`,
+               `address`,
+               id_card,
+               sex,name
+        from app_invalid_user
+        where phone = #{value}
+    </select>
+    <select id="getUserByOpenId" resultType="InvalidUserDO">
+        select `id`,
+               `pic_id`,
+               `user_name`,
+               `phone`,
+               `password`,
+               `open_id`,
+               `ry_token`,
+               `address`,
+               id_card,
+               sex,name
+        from app_invalid_user
+        where open_id = #{value}
+    </select>
+
+    <select id="list" resultType="InvalidUserDO">
+        select `id`,`pic_id`,`user_name`,`phone`,`password`,`open_id`,`ry_token`,`address`,name,
+        id_card,
+        sex from app_invalid_user
+        <where>
+            <if test="name != null and name != ''">and name =
+                #{name}
+            </if>
+            <if test="sex != null and sex != ''">and sex =
+                #{sex}
+            </if>
+            <if test="id != null and id != ''">and id =
+                #{id}
+            </if>
+            <if test="picId != null and picId != ''">and pic_id =
+                #{picId}
+            </if>
+            <if test="userName != null and userName != '' and userName != '%%'">
+                and user_name like #{userName}
+            </if>
+            <if test="phone != null and phone != ''">and phone =
+                #{phone}
+            </if>
+            <if test="password != null and password != ''">and password =
+                #{password}
+            </if>
+            <if test="openId != null and openId != ''">and open_id =
+                #{openId}
+            </if>
+            <if test="ryToken != null and ryToken != ''">and ry_token =
+                #{ryToken}
+            </if>
+            <if test="address != null and address != ''">and address =
+                #{address}
+            </if>
+        </where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+            <otherwise>
+                order by id desc
+            </otherwise>
+        </choose>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="count" resultType="int">
+        select count(*) from app_invalid_user
+        <where>
+            <if test="sex != null and sex != ''">and sex =
+                #{sex}
+            </if>
+            <if test="id != null and id != ''">and id =
+                #{id}
+            </if>
+            <if test="picId != null and picId != ''">and pic_id =
+                #{picId}
+            </if>
+            <if test="userName != null and userName != '' and userName != '%%'">
+                and user_name like #{userName}
+            </if>
+            <if test="phone != null and phone != ''">and phone =
+                #{phone}
+            </if>
+            <if test="password != null and password != ''">and password =
+                #{password}
+            </if>
+            <if test="openId != null and openId != ''">and open_id =
+                #{openId}
+            </if>
+            <if test="ryToken != null and ryToken != ''">and ry_token =
+                #{ryToken}
+            </if>
+            <if test="address != null and address != ''">and address =
+                #{address}
+            </if>
+        </where>
+    </select>
+
+    <insert id="save" parameterType="InvalidUserDO" useGeneratedKeys="true" keyProperty="id">
+        insert into app_invalid_user (`pic_id`,
+                                      `user_name`,
+                                      `phone`,
+                                      `password`,
+                                      `open_id`,
+                                      `ry_token`,
+                                      `address`,
+                                      id_card,
+                                      sex,name)
+        values (#{picId}, #{userName}, #{phone}, #{password}, #{openId}, #{ryToken}, #{address}, #{idCard}, #{sex}, #{name})
+    </insert>
+
+    <update id="update" parameterType="InvalidUserDO">
+        update app_invalid_user
+        <set>
+            <if test="picId != null">`pic_id` = #{picId
+                        },
+            </if>
+            <if test="name != null">`name` = #{name
+                        },
+            </if>
+            <if test="userName != null">`user_name` = #{userName
+                        },
+            </if>
+            <if test="idCard != null">`id_card` = #{idCard
+                        },
+            </if>
+            <if test="sex != null">`sex` = #{sex
+                        },
+            </if>
+            <if test="phone != null">`phone` = #{phone
+                        },
+            </if>
+            <if test="password != null">`password` = #{password
+                        },
+            </if>
+            <if test="openId != null">`open_id` = #{openId
+                        },
+            </if>
+            <if test="ryToken != null">`ry_token` = #{ryToken
+                        },
+            </if>
+            <if test="address != null">`address` = #{address
+                        }
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="remove">
+        delete
+        from app_invalid_user
+        where id = #{value}
+    </delete>
+
+    <delete id="batchRemove">
+        delete from app_invalid_user where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="myDoctorList" resultType="com.bootdo.vo.UserAppointmentDoctorRelDO">
+        select auadr.id,auadr.diagnosis_id,(select adc2.name from app_diagnosis_card adc2 where adc2.id=auadr.diagnosis_id) diagnosis_name, su.user_id,su.pic_id,
+        su.username,su.good_at,su.job_title,auadr.dept_name,auadr.price,auadr.name,auadr.appointment_time,auadr.status
+        from app_user_appointment_doctor_rel auadr inner join
+        sys_user su on auadr.doctor_id=su.user_id
+        where auadr.diagnosis_id in
+        (select adc.id from app_diagnosis_card adc where adc.user_id=#{userId}
+        )
+        <if test="showFlag!=null">
+            and auadr.show_flag=#{showFlag}
+        </if>
+<!--  group by doctor_id !-->
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+            <otherwise>
+                order by id desc
+            </otherwise>
+        </choose>
+    </select>
+</mapper>

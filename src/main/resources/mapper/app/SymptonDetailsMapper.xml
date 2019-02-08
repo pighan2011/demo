@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.dao.app.SymptonDetailsDao">
+
+    <select id="get" resultType="SymptonDetailsDO">
+        select `id`, `s_id`, `s_name`, `sd_desc`
+        from app_sympton_details
+        where id = #{value}
+    </select>
+
+    <select id="list" resultType="SymptonDetailsDO">
+        select `id`,`s_id`,`s_name`,`sd_desc` from app_sympton_details
+        <where>
+            <if test="id != null and id != ''">and id =
+                #{id}
+            </if>
+            <if test="sId != null and sId != ''">and s_id =
+                #{sId}
+            </if>
+            <if test="sName != null and sName != '' and sName != '%%'">
+                and s_name like #{sName}
+            </if>
+            <if test="sdDesc != null and sdDesc != '%%'">and sd_desc like
+                #{sdDesc}
+            </if>
+        </where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+            <otherwise>
+                order by id desc
+            </otherwise>
+        </choose>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="count" resultType="int">
+        select count(*) from app_sympton_details
+        <where>
+            <if test="id != null and id != ''">and id =
+                #{id}
+            </if>
+            <if test="sId != null and sId != ''">and s_id =
+                #{sId}
+            </if>
+            <if test="sName != null and sName != '' and sName != '%%'">
+                and s_name like #{sName}
+            </if>
+            <if test="sdDesc != null and sdDesc != '%%'">and sd_desc like
+                #{sdDesc}
+            </if>
+        </where>
+    </select>
+
+    <insert id="save" parameterType="SymptonDetailsDO" useGeneratedKeys="true" keyProperty="id">
+        insert into app_sympton_details (`s_id`, `s_name`, `sd_desc`)
+        values (#{sId}, #{sName}, #{sdDesc})
+    </insert>
+
+    <update id="update" parameterType="SymptonDetailsDO">
+        update app_sympton_details
+        <set>
+            <if test="sId != null">`s_id` = #{sId
+                        },
+            </if>
+            <if test="sName != null">`s_name` = #{sName
+                        },
+            </if>
+            <if test="sdDesc != null">`sd_desc` = #{sdDesc
+                        }
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="remove">
+        delete
+        from app_sympton_details
+        where id = #{value}
+    </delete>
+
+    <delete id="batchRemove">
+        delete from app_sympton_details where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

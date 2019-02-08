@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.dao.app.NewsDao">
+
+    <select id="get" resultType="NewsDO">
+        select dept_id, `id`, `title`, `home_page`, `summarize`, `news_details`, `create_date`, `create_by`
+        from app_news
+        where id = #{value}
+    </select>
+
+    <select id="list" resultType="NewsDO">
+        select dept_id, `id`,`title`,`home_page`,`summarize`,`news_details`,`create_date`,`create_by` from app_news
+        <where>
+            <if test="id != null and id != ''">and id =
+                #{id}
+            </if>
+            <if test="deptId != null and deptId != ''">and dept_id =
+                #{deptId}
+            </if>
+            <if test="title != null and title != ''">and title =
+                #{title}
+            </if>
+            <if test="homePage != null and homePage != ''">and home_page =
+                #{homePage}
+            </if>
+            <if test="summarize != null and summarize != ''">and summarize =
+                #{summarize}
+            </if>
+            <if test="newsDetails != null and newsDetails != ''">and news_details =
+                #{newsDetails}
+            </if>
+            <if test="createDate != null and createDate != ''">and create_date =
+                #{createDate}
+            </if>
+            <if test="createBy != null and createBy != ''">and create_by =
+                #{createBy}
+            </if>
+        </where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+            <otherwise>
+                order by id desc
+            </otherwise>
+        </choose>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="count" resultType="int">
+        select count(*) from app_news
+        <where>
+            <if test="id != null and id != ''">and id =
+                #{id}
+            </if>
+            <if test="title != null and title != ''">and title =
+                #{title}
+            </if>
+            <if test="homePage != null and homePage != ''">and home_page =
+                #{homePage}
+            </if>
+            <if test="summarize != null and summarize != ''">and summarize =
+                #{summarize}
+            </if>
+            <if test="newsDetails != null and newsDetails != ''">and news_details =
+                #{newsDetails}
+            </if>
+            <if test="createDate != null and createDate != ''">and create_date =
+                #{createDate}
+            </if>
+            <if test="createBy != null and createBy != ''">and create_by =
+                #{createBy}
+            </if>
+        </where>
+    </select>
+
+    <insert id="save" parameterType="NewsDO" useGeneratedKeys="true" keyProperty="id">
+        insert into app_news (`title`, `home_page`, `summarize`, `news_details`, `create_date`, `create_by`,dept_id)
+        values (#{title}, #{homePage}, #{summarize}, #{newsDetails}, #{createDate}, #{createBy},#{deptId})
+    </insert>
+
+    <update id="update" parameterType="NewsDO">
+        update app_news
+        <set>
+            <if test="title != null">`title` = #{title
+                        },
+            </if>
+            <if test="deptId != null">`dept_id` = #{deptId
+                        },
+            </if>
+            <if test="homePage != null">`home_page` = #{homePage
+                        },
+            </if>
+            <if test="summarize != null">`summarize` = #{summarize
+                        },
+            </if>
+            <if test="newsDetails != null">`news_details` = #{newsDetails
+                        },
+            </if>
+            <if test="createDate != null">`create_date` = #{createDate
+                        },
+            </if>
+            <if test="createBy != null">`create_by` = #{createBy
+                        }
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="remove">
+        delete
+        from app_news
+        where id = #{value}
+    </delete>
+
+    <delete id="batchRemove">
+        delete from app_news where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

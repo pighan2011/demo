@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+	<title>新闻资讯</title>
+	<script>
+		(function(){
+			var html = document.documentElement;
+			var width = html.getBoundingClientRect().width;
+			html.style.fontSize = width/18+'px';
+			// 1rem=60
+		})();
+	</script>
+	<style type="text/css">
+		.box{
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			min-height: 100%;
+			margin-bottom: 30px;
+			
+		}
+		.title{
+			padding: 15px 15px 5px 15px;
+			font-size: 1rem;
+			font-weight: 600;
+		}
+		.na-date{
+			padding: 0 15px;
+		}
+		.na-date span{
+			padding-right: 0.8rem;
+			font-size: 0.6rem;
+			color: #A5A5A5;
+		}
+		.image{
+			padding: 15px 15px;
+		}
+		.image img{
+			width: 100%;
+			height: 150px;
+		}
+		.text{
+			padding: 0px 15px;
+			font-size: 15px;
+		}
+	</style>
+</head>
+<body>
+<input type="hidden" th:value="${newsId}" id="newsId">
+	<div id="app">
+		<div class="box">
+			<div class="title">{{list.title}}</div>
+			<div class="na-date">
+				<span>{{list.createBy}}</span>
+				<span>{{dates}}</span>
+			</div>
+			<div class="image">
+				<img v-bind:src="list.filesDO.filePath">
+			</div>
+			<div class="text">{{list.newsDetails}}</div>
+			
+		</div>
+	</div>
+	
+</body>
+	<script src="https://unpkg.com/vue/dist/vue.js"></script>
+	<script src="https://cdn.bootcss.com/vue-resource/1.5.1/vue-resource.min.js"></script>
+	<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+	<script>
+		
+		var app= new Vue({
+				el:"#app",
+				data(){
+					return{
+						dates:'',
+						list:[]
+					}
+					
+				},
+				methods:{
+					GetQueryString:function(name){
+						var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+						var r = window.location.search.substr(1).match(reg);
+						if(r!=null)return  unescape(r[2]); return null;
+					}
+				},
+				mounted:function(){
+					var that =this
+					var newsId = $("#newsId").val();
+
+					$.ajax({
+				        url:'http://192.168.1.22:9996/news/newsDetails/'+newsId,
+				        type:'POST',
+				        data:{
+				      	
+				        },
+				         headers: {
+ 							"Content-Type": "application/x-www-form-urlencoded"
+				            
+				        },
+				        success:function(res){
+				            that.list=res.data.newsDetails
+				            var timestamp4 = new Date(1544496865000);
+				            that.dates=timestamp4.toLocaleDateString().replace(/\//g, "-") + " " + timestamp4.toTimeString().substr(0, 8)
+				        }
+				    })
+				    
+				}	 
+		});
+
+	</script>
+</html>

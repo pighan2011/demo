@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.dao.user.DiagnosisCardDao">
+
+    <select id="get" resultType="DiagnosisCardDO">
+        select `id`,`name`,`sex`,`id_card`,`age`,`phone`,`relition`,`medicare`,`user_id`,`status`        from app_diagnosis_card where id = #{value}
+    </select>
+
+    <select id="list" resultType="DiagnosisCardDO">
+        select `id`,`name`,`sex`,`id_card`,`age`,`phone`,`relition`,`medicare`,`user_id`,`status` from
+        app_diagnosis_card
+        <where>
+            <if test="id != null and id != ''">and id =
+                #{id}
+            </if>
+            <if test="name != null and name != '' and name != '%%'">
+                and name like #{name}
+            </if>
+            <if test="sex != null and sex != ''">and sex =
+                #{sex}
+            </if>
+            <if test="idCard != null and idCard != ''">and id_card =
+                #{idCard}
+            </if>
+            <if test="age != null and age != ''">and age =
+                #{age}
+            </if>
+            <if test="phone != null and phone != ''">and phone =
+                #{phone}
+            </if>
+            <if test="relition != null and relition != ''">and relition =
+                #{relition}
+            </if>
+            <if test="medicare != null and medicare != ''">and medicare =
+                #{medicare}
+            </if>
+            <if test="userId != null and userId != ''">and user_id =
+                #{userId}
+            </if>
+            <if test="status != null and status != ''">and status =
+                #{status}
+            </if>
+        </where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+            <otherwise>
+                order by id desc
+            </otherwise>
+        </choose>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="count" resultType="int">
+        select count(*) from app_diagnosis_card
+        <where>
+            <if test="id != null and id != ''">and id =
+                #{id}
+            </if>
+            <if test="name != null and name != '' and name != '%%'">
+                and name like #{name}
+            </if>
+            <if test="sex != null and sex != ''">and sex =
+                #{sex}
+            </if>
+            <if test="idCard != null and idCard != ''">and id_card =
+                #{idCard}
+            </if>
+            <if test="age != null and age != ''">and age =
+                #{age}
+            </if>
+            <if test="phone != null and phone != ''">and phone =
+                #{phone}
+            </if>
+            <if test="relition != null and relition != ''">and relition =
+                #{relition}
+            </if>
+            <if test="medicare != null and medicare != ''">and medicare =
+                #{medicare}
+            </if>
+            <if test="userId != null and userId != ''">and user_id =
+                #{userId}
+            </if>
+            <if test="status != null and status != ''">and status =
+                #{status}
+            </if>
+        </where>
+    </select>
+
+    <insert id="save" parameterType="DiagnosisCardDO">
+        insert into app_diagnosis_card
+        (
+                                    `id`, 
+                                                `name`, 
+                                                `sex`, 
+                                                `id_card`, 
+                                                `age`, 
+                                                `phone`, 
+                                                `relition`, 
+                                                `medicare`, 
+                                                `user_id`, 
+                                                `status`
+                            )
+        values
+        (
+                                    #{id}, 
+                                                #{name}, 
+                                                #{sex}, 
+                                                #{idCard}, 
+                                                #{age}, 
+                                                #{phone}, 
+                                                #{relition}, 
+                                                #{medicare}, 
+                                                #{userId}, 
+                                                #{status}
+                            )
+    </insert>
+
+    <update id="update" parameterType="DiagnosisCardDO">
+        update app_diagnosis_card
+        <set>
+            <if test="name != null">`name` = #{name
+                        },
+            </if>
+            <if test="sex != null">`sex` = #{sex
+                        },
+            </if>
+            <if test="idCard != null">`id_card` = #{idCard
+                        },
+            </if>
+            <if test="age != null">`age` = #{age
+                        },
+            </if>
+            <if test="phone != null">`phone` = #{phone
+                        },
+            </if>
+            <if test="relition != null">`relition` = #{relition
+                        },
+            </if>
+            <if test="medicare != null">`medicare` = #{medicare
+                        },
+            </if>
+            <if test="userId != null">`user_id` = #{userId
+                        },
+            </if>
+            <if test="status != null">`status` = #{status
+                        }
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="remove">
+        delete from app_diagnosis_card where id = #{value}
+    </delete>
+
+    <delete id="batchRemove">
+        delete from app_diagnosis_card where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+    <select id="cardApplyList" resultType="DiagnosisCardDO">
+        select adc.id,adc.name,adc.sex,adc.age,adc.phone,adc.medicare,aiu.user_name,adc.relition,status
+        from app_diagnosis_card adc inner join app_invalid_user aiu
+        on adc.user_id=aiu.id
+        <where>
+            <if test="status!=null and status!=''">
+                and status=#{status}
+            </if>
+        </where>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+    <select id="cardApplyListCount" resultType="int">
+        select count(*)
+        from app_diagnosis_card adc inner join app_invalid_user aiu
+        on adc.user_id=aiu.id
+        <where>
+            <if test="status!=null and status!=''">
+                and status=#{status}
+            </if>
+        </where>
+
+    </select>
+</mapper>

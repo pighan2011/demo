@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.dao.app.PicDianosisRelDao">
+
+    <select id="get" resultType="PicDianosisRelDO">
+        select `id`, `pic_id`, `dianosis_id`, `pic_class`,hos_name
+        from app_pic_dianosis_rel
+        where id = #{value}
+    </select>
+
+    <select id="list" resultType="PicDianosisRelDO">
+        select `id`,`pic_id`,`dianosis_id`,`pic_class`,hos_name from app_pic_dianosis_rel
+        <where>
+            <if test="id != null and id != ''">and id =
+                #{id}
+            </if>
+            <if test="hosName != null and hosName != '%%'">and hos_name like
+                #{hosName}
+            </if>
+            <if test="picId != null and picId != ''">and pic_id =
+                #{picId}
+            </if>
+            <if test="dianosisId != null and dianosisId != ''">and dianosis_id =
+                #{dianosisId}
+            </if>
+            <if test="picClass != null and picClass != ''">and pic_class =
+                #{picClass}
+            </if>
+        </where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+            <otherwise>
+                order by id desc
+            </otherwise>
+        </choose>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="count" resultType="int">
+        select count(*) from app_pic_dianosis_rel
+        <where>
+            <if test="id != null and id != ''">and id =
+                #{id}
+            </if>
+            <if test="picId != null and picId != ''">and pic_id =
+                #{picId}
+            </if>
+            <if test="dianosisId != null and dianosisId != ''">and dianosis_id =
+                #{dianosisId}
+            </if>
+            <if test="picClass != null and picClass != ''">and pic_class =
+                #{picClass}
+            </if>
+        </where>
+    </select>
+
+    <insert id="save" parameterType="PicDianosisRelDO" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into app_pic_dianosis_rel (`pic_id`, `dianosis_id`, `pic_class`,hos_name)
+        values (#{picId}, #{dianosisId}, #{picClass},#{hosName})
+    </insert>
+
+    <update id="update" parameterType="PicDianosisRelDO">
+        update app_pic_dianosis_rel
+        <set>
+            <if test="picId != null">`pic_id` = #{picId
+                        },
+            </if>
+            <if test="dianosisId != null">`dianosis_id` = #{dianosisId
+                        },
+            </if>
+            <if test="picClass != null">`pic_class` = #{picClass
+                        }
+            </if>
+            <if test="hosName != null">`hos_hame` = #{hosName
+                        }
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="remove">
+        delete
+        from app_pic_dianosis_rel
+        where id = #{value}
+    </delete>
+
+    <delete id="batchRemove">
+        delete from app_pic_dianosis_rel where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.dao.base.AreaDao">
+
+    <select id="get" resultType="AreaDO">
+        select `id`,`name`,`pid` from sys_area where id = #{value}
+    </select>
+
+    <select id="list" resultType="AreaDO">
+        select `id`,`name`,`pid` from sys_area
+        <where>
+            <if test="id != null and id != ''">and id = #{id}</if>
+            <if test="name != null and name != '%%'">and name like #{name}</if>
+            <if test="pid != null and pid != ''">and pid = #{pid}</if>
+        </where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+            <otherwise>
+                order by id asc
+            </otherwise>
+        </choose>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="count" resultType="int">
+        select count(*) from sys_area
+        <where>
+            <if test="id != null and id != ''">and id = #{id}</if>
+            <if test="name != null and name != ''">and name = #{name}</if>
+            <if test="pid != null and pid != ''">and pid = #{pid}</if>
+        </where>
+    </select>
+
+
+</mapper>

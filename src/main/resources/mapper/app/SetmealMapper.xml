@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.dao.app.SetmealDao">
+
+    <select id="get"  resultType="SetmealDO">
+        select                *
+
+        from app_setmeal
+        where id = #{value}
+    </select>
+
+    <select id="list" resultType="SetmealDO">
+        select
+               *
+        from app_setmeal
+        <where>
+            <if test="deptId != null and deptId != ''">and dept_id =
+                #{deptId}
+            </if>
+               <if test="id != null and id != ''">and id =
+                #{id}
+            </if>
+            <if test="homePage != null and homePage != ''">and home_page =
+                #{homePage}
+            </if>
+            <if test="name != null and name != '' and name != '%%'">
+                and name like #{name}
+            </if>
+            <if test="sex != null and sex != ''">and sex =
+                #{sex}
+            </if>
+            <if test="notice != null and notice != ''">and notice =
+                #{notice}
+            </if>
+            <if test="sDesc != null and sDesc != ''">and s_desc =
+                #{sDesc}
+            </if>
+            <if test="oldPrice != null and oldPrice != ''">and old_price =
+                #{oldPrice}
+            </if>
+            <if test="newPrice != null and newPrice != ''">and new_price =
+                #{newPrice}
+            </if>
+
+        </where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+            <otherwise>
+                order by id desc
+            </otherwise>
+        </choose>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="count" resultType="int">
+        select count(*) from app_setmeal
+        <where>
+            <if test="id != null and id != ''">and id =
+                #{id}
+            </if>
+            <if test="homePage != null and homePage != ''">and home_page =
+                #{homePage}
+            </if>
+            <if test="name != null and name != '' and name != '%%'">
+                and name like #{name}
+            </if>
+            <if test="sex != null and sex != ''">and sex =
+                #{sex}
+            </if>
+            <if test="notice != null and notice != ''">and notice =
+                #{notice}
+            </if>
+            <if test="sDesc != null and sDesc != ''">and s_desc =
+                #{sDesc}
+            </if>
+            <if test="oldPrice != null and oldPrice != ''">and old_price =
+                #{oldPrice}
+            </if>
+            <if test="newPrice != null and newPrice != ''">and new_price =
+                #{newPrice}
+            </if>
+        </where>
+    </select>
+
+    <insert id="save" parameterType="SetmealDO" useGeneratedKeys="true" keyProperty="id">
+        insert into app_setmeal (`home_page`, `name`, `sex`, `notice`, `s_desc`, `old_price`, `new_price`,dept_id)
+        values (#{homePage}, #{name}, #{sex}, #{notice}, #{sDesc}, #{oldPrice}, #{newPrice},#{deptId})
+    </insert>
+
+    <update id="update" parameterType="SetmealDO">
+        update app_setmeal
+        <set>
+            <if test="homePage != null">`home_page` = #{homePage
+                        },
+            </if>
+            <if test="deptId != null">`dept_id` = #{deptId
+                        },
+            </if>
+            <if test="name != null">`name` = #{name
+                        },
+            </if>
+            <if test="sex != null">`sex` = #{sex
+                        },
+            </if>
+            <if test="notice != null">`notice` = #{notice
+                        },
+            </if>
+            <if test="sDesc != null">`s_desc` = #{sDesc
+                        },
+            </if>
+            <if test="oldPrice != null">`old_price` = #{oldPrice
+                        },
+            </if>
+            <if test="newPrice != null">`new_price` = #{newPrice
+                        }
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="remove">
+        delete
+        from app_setmeal
+        where id = #{value}
+    </delete>
+
+    <delete id="batchRemove">
+        delete from app_setmeal where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

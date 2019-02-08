@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.dao.app.OrderDetailsDao">
+
+    <select id="get" resultType="OrderDetailsDO">
+        select `id`, `name`, `price`, `count`, `total_money`, `po_id`
+        from app_order_details
+        where id = #{value}
+    </select>
+
+    <select id="list" resultType="OrderDetailsDO">
+        select `id`,`name`,`price`,`count`,`total_money`,`po_id` from app_order_details
+        <where>
+            <if test="id != null and id != ''">and id =
+                #{id}
+            </if>
+            <if test="name != null and name != '' and name != '%%'">
+                and name like #{name}
+            </if>
+            <if test="price != null and price != ''">and price =
+                #{price}
+            </if>
+            <if test="count != null and count != ''">and count =
+                #{count}
+            </if>
+            <if test="totalMoney != null and totalMoney != ''">and total_money =
+                #{totalMoney}
+            </if>
+            <if test="poId != null and poId != ''">and po_id =
+                #{poId}
+            </if>
+        </where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+            <otherwise>
+                order by id desc
+            </otherwise>
+        </choose>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="count" resultType="int">
+        select count(*) from app_order_details
+        <where>
+            <if test="id != null and id != ''">and id =
+                #{id}
+            </if>
+            <if test="name != null and name != '' and name != '%%'">
+                and name like #{name}
+            </if>
+            <if test="price != null and price != ''">and price =
+                #{price}
+            </if>
+            <if test="count != null and count != ''">and count =
+                #{count}
+            </if>
+            <if test="totalMoney != null and totalMoney != ''">and total_money =
+                #{totalMoney}
+            </if>
+            <if test="poId != null and poId != ''">and po_id =
+                #{poId}
+            </if>
+        </where>
+    </select>
+
+    <insert id="save" parameterType="OrderDetailsDO" useGeneratedKeys="true" keyProperty="id">
+        insert into app_order_details (`name`, `price`, `count`, `total_money`, `po_id`)
+        values (#{name}, #{price}, #{count}, #{totalMoney}, #{poId})
+    </insert>
+
+    <update id="update" parameterType="OrderDetailsDO">
+        update app_order_details
+        <set>
+            <if test="name != null">`name` = #{name
+                        },
+            </if>
+            <if test="price != null">`price` = #{price
+                        },
+            </if>
+            <if test="count != null">`count` = #{count
+                        },
+            </if>
+            <if test="totalMoney != null">`total_money` = #{totalMoney
+                        },
+            </if>
+            <if test="poId != null">`po_id` = #{poId
+                        }
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="remove">
+        delete
+        from app_order_details
+        where id = #{value}
+    </delete>
+
+    <delete id="batchRemove">
+        delete from app_order_details where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

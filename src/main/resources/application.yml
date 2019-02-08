@@ -1,0 +1,23 @@
+mybatis:
+  mapper-locations: classpath:mapper/**/*.xml
+  type-aliases-package: com.bootdo.vo
+  configuration:
+    map-underscore-to-camel-case: true
+server:
+  port: 9996
+logging:
+  level:
+    root: info
+    com.bootdo: debug
+    org.springframework.web: info
+    com.github.binarywang.demo.wx.pay: debug
+    com.github.binarywang.wxpay: debug
+spring:
+  profiles:
+    active: pro
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  servlet:
+    multipart:
+      max-file-size: 5mb

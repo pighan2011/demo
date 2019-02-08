@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.dao.app.HospitalizationApplyDao">
+
+    <select id="get" resultType="HospitalizationApplyDO">
+        select *,(select name from app_diagnosis_card adc  where adc.id=diagnosis_id) diagnosis_name
+        from app_hospitalization_apply
+        where id = #{value}
+    </select>
+
+    <select id="list" resultType="HospitalizationApplyDO">
+        select *,(select name from app_diagnosis_card adc  where adc.id=diagnosis_id) diagnosis_name
+        from app_hospitalization_apply
+        <where>
+            <if test="id != null and id != ''">and id =
+                #{id}
+            </if>
+            <if test="userId != null and userId != ''">and user_id =
+                #{userId}
+            </if>
+            <if test="diagnosisId != null and diagnosisId != ''">and diagnosis_id =
+                #{diagnosisId}
+            </if>
+            <if test="deptId != null and deptId != ''">and dept_id =
+                #{deptId}
+            </if>
+            <if test="applyList != null and applyList != ''">
+                and dept_id in(
+                select dept_id
+                from sys_dept where parent_id=#{applyList}
+                union all
+                select dept_id
+                from sys_dept where parent_id in (select dept_id
+                from sys_dept where parent_id=#{applyList})
+                )
+            </if>
+            <if test="deptName != null and deptName != ''">and dept_name =
+                #{deptName}
+            </if>
+            <if test="roomClass != null and roomClass != ''">and room_class =
+                #{roomClass}
+            </if>
+            <if test="status != null and status != ''">and status =
+                #{status}
+            </if>
+            <if test="applyDate != null and applyDate != ''">and apply_date =
+                #{applyDate}
+            </if>
+            <if test="hosDate != null and hosDate != ''">and hos_date =
+                #{hosDate}
+            </if>
+            <if test="hosDay != null and hosDay != ''">and hos_day =
+                #{hosDay}
+            </if>
+            <if test="money != null and money != ''">and money =
+                #{money}
+            </if>
+
+            <if test="transactionId != null and transactionId != ''">and transaction_id =
+                #{transactionId}
+            </if>
+            <if test="nonceStr != null and nonceStr != ''">and nonce_str =
+                #{nonceStr}
+            </if>
+            <if test="outTradeNo != null and outTradeNo != ''">and out_trade_no =
+                #{outTradeNo}
+            </if>
+
+            <if test="payType != null and payType != ''">and pay_type =
+                #{payType}
+            </if>
+        </where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+            <otherwise>
+                order by id desc
+            </otherwise>
+        </choose>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="count" resultType="int">
+        select count(*) from app_hospitalization_apply
+        <where>
+            <if test="id != null and id != ''">and id =
+                #{id}
+            </if>
+            <if test="userId != null and userId != ''">and user_id =
+                #{userId}
+            </if>
+            <if test="diagnosisId != null and diagnosisId != ''">and diagnosis_id =
+                #{diagnosisId}
+            </if>
+            <if test="deptId != null and deptId != ''">and dept_id =
+                #{deptId}
+            </if>
+            <if test="deptName != null and deptName != ''">and dept_name =
+                #{deptName}
+            </if>
+            <if test="roomClass != null and roomClass != ''">and room_class =
+                #{roomClass}
+            </if>
+            <if test="status != null and status != ''">and status =
+                #{status}
+            </if>
+            <if test="applyDate != null and applyDate != ''">and apply_date =
+                #{applyDate}
+            </if>
+            <if test="hosDate != null and hosDate != ''">and hos_date =
+                #{hosDate}
+            </if>
+            <if test="hosDay != null and hosDay != ''">and hos_day =
+                #{hosDay}
+            </if>
+            <if test="money != null and money != ''">and money =
+                #{money}
+            </if>
+        </where>
+    </select>
+
+    <insert id="save" parameterType="HospitalizationApplyDO" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into app_hospitalization_apply (`user_id`,
+                                               `diagnosis_id`,
+                                               `dept_id`,
+                                               `dept_name`,
+                                               `room_class`,
+                                               `status`,
+                                               `apply_date`,
+                                               `hos_date`,
+                                               `hos_day`,
+                                               `money`,
+                                               transaction_id,
+                                               nonce_str,
+                                               out_trade_no,
+                                               pay_type)
+        values (#{userId},
+                #{diagnosisId},
+                #{deptId},
+                #{deptName},
+                #{roomClass},
+                #{status},
+                #{applyDate},
+                #{hosDate},
+                #{hosDay},
+                #{money},
+                #{transactionId},
+                #{nonceStr},
+                #{outTradeNo},
+                #{payType})
+    </insert>
+
+    <update id="update" parameterType="HospitalizationApplyDO">
+        update app_hospitalization_apply
+        <set>
+            <if test="userId != null">`user_id` = #{userId
+                        },
+            </if>
+            <if test="diagnosisId != null">`diagnosis_id` = #{diagnosisId
+                        },
+            </if>
+            <if test="deptId != null">`dept_id` = #{deptId
+                        },
+            </if>
+            <if test="deptName != null">`dept_name` = #{deptName
+                        },
+            </if>
+            <if test="roomClass != null">`room_class` = #{roomClass
+                        },
+            </if>
+            <if test="status != null">`status` = #{status
+                        },
+            </if>
+            <if test="applyDate != null">`apply_date` = #{applyDate
+                        },
+            </if>
+            <if test="hosDate != null">`hos_date` = #{hosDate
+                        },
+            </if>
+            <if test="hosDay != null">`hos_day` = #{hosDay
+                        },
+            </if>
+            <if test="money != null">`money` = #{money
+                        },
+            </if>
+            <if test="transactionId != null">`transaction_id` = #{transactionId
+                        },
+            </if>
+            <if test="nonceStr != null">`nonce_str` = #{nonceStr
+                        },
+            </if>
+            <if test="payType != null">`pay_type` = #{payType
+                        },
+            </if>
+            <if test="outTradeNo != null">`out_trade_no` = #{outTradeNo
+                        }
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="remove">
+        delete
+        from app_hospitalization_apply
+        where id = #{value}
+    </delete>
+
+    <delete id="batchRemove">
+        delete from app_hospitalization_apply where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="hosApplyList" resultType="HospitalizationApplyDO">
+        select aha.id,adc.id diagnosis_id,adc.name, adc.age, adc.sex,aha.room_class,aha.status,hos_day,money
+        from app_hospitalization_apply aha
+        inner join app_diagnosis_card adc on aha.diagnosis_id = adc.id
+        <where>
+            <if test="deptId!=null">
+                and aha.dept_id=#{deptId}
+            </if>
+            <if test="name != null and name != '' and name != '%%'">
+                and adc.name like #{name}
+            </if>
+        </where>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+    <select id="hosApplyListCount" resultType="int">
+        select count(*)
+        from app_hospitalization_apply aha
+        inner join app_diagnosis_card adc on aha.diagnosis_id = adc.id
+        <where>
+            <if test="deptId!=null">
+                and aha.dept_id=#{deptId}
+            </if>
+            <if test="name != null and name != '' and name != '%%'">
+                and adc.name like #{name}
+            </if>
+        </where>
+    </select>
+</mapper>

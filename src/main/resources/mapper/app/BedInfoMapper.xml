@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.dao.app.BedInfoDao">
+
+    <select id="get" resultType="BedInfoDO">
+        select `id`,`dept_id`,`dept_name`,`open_bed`,`surplus_bed`,hospital_id
+        from app_bed_info
+        where id = #{value}
+    </select>
+
+    <select id="list" resultType="BedInfoDO">
+        select `id`,`dept_id`,`dept_name`,`open_bed`,`surplus_bed`,hospital_id from app_bed_info
+        <where>
+            <if test="id != null and id != ''">and id =
+                #{id}
+            </if>
+            <if test="hospitalId != null and hospitalId != ''">and hospital_id =
+                #{hospitalId}
+            </if>
+            <if test="deptId != null and deptId != ''">and dept_id =
+                #{deptId}
+            </if>
+            <if test="deptName != null and deptName != '' and deptName != '%%'">
+                and dept_name like #{deptName}
+            </if>
+            <if test="openBed != null and openBed != ''">and open_bed =
+                #{openBed}
+            </if>
+            <if test="surplusBed != null and surplusBed != ''">and surplus_bed =
+                #{surplusBed}
+            </if>
+        </where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+            <otherwise>
+                order by id desc
+            </otherwise>
+        </choose>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="count" resultType="int">
+        select count(*) from app_bed_info
+        <where>
+            <if test="id != null and id != ''">and id =
+                #{id}
+            </if>
+            <if test="deptId != null and deptId != ''">and dept_id =
+                #{deptId}
+            </if>
+            <if test="deptName != null and deptName != '' and deptName != '%%'">
+                and dept_name like #{deptName}
+            </if>
+            <if test="openBed != null and openBed != ''">and open_bed =
+                #{openBed}
+            </if>
+            <if test="surplusBed != null and surplusBed != ''">and surplus_bed =
+                #{surplusBed}
+            </if>
+        </where>
+    </select>
+
+    <insert id="save" parameterType="BedInfoDO" useGeneratedKeys="true" keyProperty="id">
+        insert into app_bed_info
+        (`dept_id`,
+         `dept_name`,
+         `open_bed`,
+         `surplus_bed`,
+         hospital_id)
+        values (#{deptId},
+                #{deptName},
+                #{openBed},
+                #{surplusBed},
+                #{hospitalId})
+    </insert>
+
+    <update id="update" parameterType="BedInfoDO">
+        update app_bed_info
+        <set>
+            <if test="deptId != null">`dept_id` = #{deptId
+                        },
+            </if>
+            <if test="hospitalId != null">`hospital_id` = #{hospitalId
+                        },
+            </if>
+            <if test="deptName != null">`dept_name` = #{deptName
+                        },
+            </if>
+            <if test="openBed != null">`open_bed` = #{openBed
+                        },
+            </if>
+            <if test="surplusBed != null">`surplus_bed` = #{surplusBed
+                        }
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="remove">
+        delete
+        from app_bed_info
+        where id = #{value}
+    </delete>
+
+    <delete id="batchRemove">
+        delete from app_bed_info where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.dao.system.FilesDao">
+
+    <select id="get" resultType="FilesDO">
+        select `id`,`file_name`,`file_path`,`file_size`,`file_type`,`upload_by`,`upload_date`,`file_remarks`,width,height from files
+        where id = #{value}
+    </select>
+
+    <select id="list" resultType="FilesDO">
+        select `id`,`file_name`,`file_path`,`file_size`,`file_type`,`upload_by`,`upload_date`,`file_remarks`,height,width from files
+        <where>
+            <if test="id != null and id != ''">and id = #{id}</if>
+            <if test="fileName != null and fileName != ''">and file_name = #{fileName}</if>
+            <if test="filePath != null and filePath != ''">and file_path = #{filePath}</if>
+            <if test="fileSize != null and fileSize != ''">and file_size = #{fileSize}</if>
+            <if test="fileType != null and fileType != ''">and file_type = #{fileType}</if>
+            <if test="uploadBy != null and uploadBy != ''">and upload_by = #{uploadBy}</if>
+            <if test="uploadDate != null and uploadDate != ''">and upload_date = #{uploadDate}</if>
+            <if test="fileRemarks != null and fileRemarks != ''">and file_remarks = #{fileRemarks}</if>
+        </where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+            <otherwise>
+                order by id desc
+            </otherwise>
+        </choose>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="count" resultType="int">
+        select count(*) from files
+        <where>
+            <if test="id != null and id != ''">and id = #{id}</if>
+            <if test="fileName != null and fileName != ''">and file_name = #{fileName}</if>
+            <if test="filePath != null and filePath != ''">and file_path = #{filePath}</if>
+            <if test="fileSize != null and fileSize != ''">and file_size = #{fileSize}</if>
+            <if test="fileType != null and fileType != ''">and file_type = #{fileType}</if>
+            <if test="uploadBy != null and uploadBy != ''">and upload_by = #{uploadBy}</if>
+            <if test="uploadDate != null and uploadDate != ''">and upload_date = #{uploadDate}</if>
+            <if test="fileRemarks != null and fileRemarks != ''">and file_remarks = #{fileRemarks}</if>
+        </where>
+    </select>
+
+    <insert id="save" parameterType="FilesDO" useGeneratedKeys="true" keyProperty="id">
+        insert into files
+        (
+        `file_name`,
+        `file_path`,
+        `file_size`,
+        `file_type`,
+        `upload_by`,
+        `upload_date`,
+        `file_remarks`,
+         width,height
+        )
+        values
+        (
+        #{fileName},
+        #{filePath},
+        #{fileSize},
+        #{fileType},
+        #{uploadBy},
+        #{uploadDate},
+        #{fileRemarks},
+        #{width},
+         #{height}
+        )
+    </insert>
+
+    <update id="update" parameterType="FilesDO">
+        update files
+        <set>
+            <if test="fileName != null">`file_name` = #{fileName},</if>
+            <if test="filePath != null">`file_path` = #{filePath},</if>
+            <if test="fileSize != null">`file_size` = #{fileSize},</if>
+            <if test="fileType != null">`file_type` = #{fileType},</if>
+            <if test="uploadBy != null">`upload_by` = #{uploadBy},</if>
+            <if test="uploadDate != null">`upload_date` = #{uploadDate},</if>
+            <if test="width != null">`width` = #{width},</if>
+            <if test="height != null">`height` = #{height},</if>
+            <if test="fileRemarks != null">`file_remarks` = #{fileRemarks}</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="remove">
+        delete from files where id = #{value}
+    </delete>
+
+    <delete id="batchRemove">
+        delete from files where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

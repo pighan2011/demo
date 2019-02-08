@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.dao.app.UeDetailsDao">
+
+    <select id="get" resultType="UeDetailsDO">
+        select `id`, `name`, `ud_desc`, `ue_id`
+        from app_ue_details
+        where id = #{value}
+    </select>
+
+    <select id="list" resultType="UeDetailsDO">
+        select `id`,`name`,`ud_desc`,`ue_id` from app_ue_details
+        <where>
+            <if test="id != null and id != ''">and id =
+                #{id}
+            </if>
+            <if test="name != null and name != '' and name != '%%'">
+                and name like #{name}
+            </if>
+            <if test="udDesc != null and udDesc != ''">and ud_desc =
+                #{udDesc}
+            </if>
+            <if test="ueId != null and ueId != ''">and ue_id =
+                #{ueId}
+            </if>
+        </where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+            <otherwise>
+                order by id desc
+            </otherwise>
+        </choose>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="count" resultType="int">
+        select count(*) from app_ue_details
+        <where>
+            <if test="id != null and id != ''">and id =
+                #{id}
+            </if>
+            <if test="name != null and name != '' and name != '%%'">
+                and name like #{name}
+            </if>
+            <if test="udDesc != null and udDesc != ''">and ud_desc =
+                #{udDesc}
+            </if>
+            <if test="ueId != null and ueId != ''">and ue_id =
+                #{ueId}
+            </if>
+        </where>
+    </select>
+
+    <insert id="save" parameterType="UeDetailsDO" useGeneratedKeys="true" keyProperty="id">
+        insert into app_ue_details (`name`, `ud_desc`, `ue_id`)
+        values (#{name}, #{udDesc}, #{ueId})
+    </insert>
+
+    <update id="update" parameterType="UeDetailsDO">
+        update app_ue_details
+        <set>
+            <if test="name != null">`name` = #{name
+                        },
+            </if>
+            <if test="udDesc != null">`ud_desc` = #{udDesc
+                        },
+            </if>
+            <if test="ueId != null">`ue_id` = #{ueId
+                        }
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="remove">
+        delete
+        from app_ue_details
+        where id = #{value}
+    </delete>
+
+    <delete id="batchRemove">
+        delete from app_ue_details where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.dao.app.SsrRelDescDao">
+
+    <select id="get" resultType="SsrRelDescDO">
+        select `id`, `ssr_id`, `sd_id`
+        from app_ssr_rel_desc
+        where id = #{value}
+    </select>
+
+    <select id="list" resultType="SsrRelDescDO">
+        select `id`,`ssr_id`,`sd_id` from app_ssr_rel_desc
+        <where>
+            <if test="id != null and id != ''">and id =
+                #{id}
+            </if>
+            <if test="ssrId != null and ssrId != ''">and ssr_id =
+                #{ssrId}
+            </if>
+            <if test="sdId != null and sdId != ''">and sd_id =
+                #{sdId}
+            </if>
+        </where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+            <otherwise>
+                order by id desc
+            </otherwise>
+        </choose>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="count" resultType="int">
+        select count(*) from app_ssr_rel_desc
+        <where>
+            <if test="id != null and id != ''">and id =
+                #{id}
+            </if>
+            <if test="ssrId != null and ssrId != ''">and ssr_id =
+                #{ssrId}
+            </if>
+            <if test="sdId != null and sdId != ''">and sd_id =
+                #{sdId}
+            </if>
+        </where>
+    </select>
+
+    <insert id="save" parameterType="SsrRelDescDO" useGeneratedKeys="true" keyProperty="id">
+        insert into app_ssr_rel_desc (`ssr_id`, `sd_id`)
+        values (#{ssrId}, #{sdId})
+    </insert>
+
+    <update id="update" parameterType="SsrRelDescDO">
+        update app_ssr_rel_desc
+        <set>
+            <if test="ssrId != null">`ssr_id` = #{ssrId
+                        },
+            </if>
+            <if test="sdId != null">`sd_id` = #{sdId
+                        }
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="remove">
+        delete
+        from app_ssr_rel_desc
+        where id = #{value}
+    </delete>
+
+    <delete id="batchRemove">
+        delete from app_ssr_rel_desc where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="srdList" resultType="SsrRelDescDO">
+        select asrd.id ,asrd.sd_id,asd.sd_desc
+        from app_ssr_rel_desc asrd inner join app_sympton_details asd
+                     on asrd.sd_id=asd.id
+        where asrd.ssr_id=#{ssrId}
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+    <select id="srdListCount" resultType="int">
+        select count(*)
+        from app_ssr_rel_desc asrd inner join app_sympton_details asd
+                     on asrd.sd_id=asd.id
+        where asrd.ssr_id=#{ssrId}
+    </select>
+</mapper>

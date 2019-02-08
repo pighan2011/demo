@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.dao.app.HospitalizationPayListDao">
+
+    <select id="get" resultType="HospitalizationPayListDO">
+        select *
+
+        from app_hospitalization_pay_list
+        where id = #{value}
+    </select>
+
+    <select id="list" resultType="HospitalizationPayListDO">
+        select * from
+        app_hospitalization_pay_list
+        <where>
+            <if test="id != null and id != ''">and id =
+                #{id}
+            </if>
+            <if test="hosId!=null and hosId != ''">and hos_id =
+                #{hosId}
+            </if>
+            <if test="name != null and name != '' and name != '%%'">
+                and name like #{name}
+            </if>
+            <if test="payDate != null and payDate != ''">and pay_date =
+                #{payDate}
+            </if>
+            <if test="money != null and money != ''">and money =
+                #{money}
+            </if>
+            <if test="userId != null and userId != ''">and user_id =
+                #{userId}
+            </if>
+            <if test="diagnosisId != null and diagnosisId != ''">and diagnosis_id =
+                #{diagnosisId}
+            </if>
+            <if test="status != null and status != ''">and status =
+                #{status}
+            </if>
+            <if test="createDate != null and createDate != ''">and create_date =
+                #{createDate}
+            </if>
+            <if test="createBy != null and createBy != ''">and create_by =
+                #{createBy}
+            </if>
+            <if test="deptId != null and deptId != ''">and hos_id in
+                (select aha.id from app_hospitalization_apply aha
+                where aha.dept_id
+                 in
+                (
+                select dept_id
+                from sys_dept where parent_id=#{deptId}
+                union all
+                select dept_id
+                from sys_dept where parent_id in (select dept_id
+                from sys_dept where parent_id=#{deptId})
+
+                )
+                 and aha.diagnosis_id=#{diagnosisId})
+            </if>
+
+            <if test="transactionId != null and transactionId != ''">and transaction_id =
+                #{transactionId}
+            </if>
+            <if test="nonceStr != null and nonceStr != ''">and nonce_str =
+                #{nonceStr}
+            </if>
+            <if test="outTradeNo != null and outTradeNo != ''">and out_trade_no =
+                #{outTradeNo}
+            </if>
+
+            <if test="payType != null and payType != ''">and pay_type =
+                #{payType}
+            </if>
+        </where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+            <otherwise>
+                order by id desc
+            </otherwise>
+        </choose>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="count" resultType="int">
+        select count(*) from app_hospitalization_pay_list
+        <where>
+            <if test="id != null and id != ''">and id =
+                #{id}
+            </if>
+            <if test="hosId!=null and hosId != ''">and hos_id =
+                #{hosId}
+            </if>
+            <if test="name != null and name != '' and name != '%%'">
+                and name like #{name}
+            </if>
+            <if test="payDate != null and payDate != ''">and pay_date =
+                #{payDate}
+            </if>
+            <if test="money != null and money != ''">and money =
+                #{money}
+            </if>
+            <if test="userId != null and userId != ''">and user_id =
+                #{userId}
+            </if>
+            <if test="diagnosisId != null and diagnosisId != ''">and diagnosis_id =
+                #{diagnosisId}
+            </if>
+            <if test="status != null and status != ''">and status =
+                #{status}
+            </if>
+            <if test="createDate != null and createDate != ''">and create_date =
+                #{createDate}
+            </if>
+            <if test="createBy != null and createBy != ''">and create_by =
+                #{createBy}
+            </if>
+        </where>
+    </select>
+
+    <insert id="save" parameterType="HospitalizationPayListDO" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into app_hospitalization_pay_list (`name`,
+                                                  `pay_date`,
+                                                  `money`,
+                                                  `user_id`,
+                                                  `diagnosis_id`,
+                                                  `status`,
+                                                  `create_date`,
+                                                  `create_by`,
+                hos_id,
+                                                  transaction_id,
+                                                  nonce_str,
+                                                  out_trade_no,
+                                                  pay_type)
+        values (#{name}, #{payDate}, #{money}, #{userId}, #{diagnosisId}, #{status}, #{createDate}, #{createBy},#{hosId},
+                #{transactionId},
+                #{nonceStr},
+                #{outTradeNo},
+                #{payType})
+    </insert>
+
+    <update id="update" parameterType="HospitalizationPayListDO">
+        update app_hospitalization_pay_list
+        <set>
+            <if test="name != null">`name` = #{name
+                        },
+            </if>
+                <if test="hosId != null">`hos_id` = #{hosId
+                        },
+            </if>
+            <if test="payDate != null">`pay_date` = #{payDate
+                        },
+            </if>
+            <if test="money != null">`money` = #{money
+                        },
+            </if>
+            <if test="userId != null">`user_id` = #{userId
+                        },
+            </if>
+            <if test="diagnosisId != null">`diagnosis_id` = #{diagnosisId
+                        },
+            </if>
+            <if test="status != null">`status` = #{status
+                        },
+            </if>
+            <if test="createDate != null">`create_date` = #{createDate
+                        },
+            </if>
+            <if test="createBy != null">`create_by` = #{createBy
+                        },
+            </if>
+
+            <if test="transactionId != null">`transaction_id` = #{transactionId
+                        },
+            </if>
+            <if test="nonceStr != null">`nonce_str` = #{nonceStr
+                        },
+            </if>
+            <if test="payType != null">`pay_type` = #{payType
+                        },
+            </if>
+            <if test="outTradeNo != null">`out_trade_no` = #{outTradeNo
+                        }
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="remove">
+        delete
+        from app_hospitalization_pay_list
+        where id = #{value}
+    </delete>
+
+    <delete id="batchRemove">
+        delete from app_hospitalization_pay_list where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.dao.app.PaymentOrderDao">
+
+    <select id="get" resultType="PaymentOrderDO">
+        select *
+        from app_payment_order
+        where id = #{value}
+    </select>
+
+    <select id="list" resultType="PaymentOrderDO">
+        select *
+        from app_payment_order
+        <where>
+            <if test="id != null and id != ''">and id =
+                #{id}
+            </if>
+            <if test="payName != null and payName != '' and payName != '%%'">
+                and pay_name like #{payName}
+            </if>
+            <if test="payClass != null and payClass != ''">and pay_class =
+                #{payClass}
+            </if>
+            <if test="payMoney != null and payMoney != ''">and pay_money =
+                #{payMoney}
+            </if>
+            <if test="status != null and status != ''">and status =
+                #{status}
+            </if>
+            <if test="doctorId != null and doctorId != ''">and doctor_id =
+                #{doctorId}
+            </if>
+            <if test="doctorName != null and doctorName != '' and doctorName != '%%'">
+                and doctor_name like #{doctorName}
+            </if>
+            <if test="diagnosisId != null and diagnosisId != ''">and diagnosis_id =
+                #{diagnosisId}
+            </if>
+            <if test="userId != null and userId != ''">and user_id =
+                #{userId}
+            </if>
+            <if test="createName != null and createName != '' and createName != '%%'">
+                and create_name like #{createName}
+            </if>
+            <if test="deptId != null and deptId != ''">
+                and doctor_id
+                in (
+                select user_id
+                from sys_user
+                where dept_id in (
+                select dept_id
+                from sys_dept
+                where parent_id = #{deptId}
+                union all
+                select dept_id
+                from sys_dept
+                where parent_id in
+                (select dept_id
+                from sys_dept
+                where parent_id = #{deptId})
+                )
+                )
+            </if>
+
+            <if test="transactionId != null and transactionId != ''">and transaction_id =
+                #{transactionId}
+            </if>
+            <if test="nonceStr != null and nonceStr != ''">and nonce_str =
+                #{nonceStr}
+            </if>
+            <if test="outTradeNo != null and outTradeNo != ''">and out_trade_no =
+                #{outTradeNo}
+            </if>
+
+            <if test="payType != null and payType != ''">and pay_type =
+                #{payType}
+            </if>
+        </where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+            <otherwise>
+                order by id desc
+            </otherwise>
+        </choose>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="count" resultType="int">
+        select count(*) from app_payment_order
+        <where>
+            <if test="id != null and id != ''">and id =
+                #{id}
+            </if>
+            <if test="payName != null and payName != '' and payName != '%%'">
+                and pay_name like #{payName}
+            </if>
+            <if test="payClass != null and payClass != ''">and pay_class =
+                #{payClass}
+            </if>
+            <if test="payMoney != null and payMoney != ''">and pay_money =
+                #{payMoney}
+            </if>
+            <if test="status != null and status != ''">and status =
+                #{status}
+            </if>
+            <if test="doctorId != null and doctorId != ''">and doctor_id =
+                #{doctorId}
+            </if>
+            <if test="doctorName != null and doctorName != '' and doctorName != '%%'">
+                and doctor_name like #{doctorName}
+            </if>
+            <if test="diagnosisId != null and diagnosisId != ''">and diagnosis_id =
+                #{diagnosisId}
+            </if>
+            <if test="userId != null and userId != ''">and user_id =
+                #{userId}
+            </if>
+            <if test="createName != null and createName != '' and createName != '%%'">
+                and create_name like #{createName}
+            </if>
+        </where>
+    </select>
+
+    <insert id="save" parameterType="PaymentOrderDO" useGeneratedKeys="true" keyProperty="id">
+        insert into app_payment_order
+        (`pay_name`,
+         `pay_class`,
+         `pay_money`,
+         `status`,
+         `doctor_id`,
+         `doctor_name`,
+         `diagnosis_id`,
+         `user_id`,
+         `create_name`,
+         transaction_id,
+         nonce_str,
+         out_trade_no,
+         pay_type)
+        values (#{payName},
+                #{payClass},
+                #{payMoney},
+                #{status},
+                #{doctorId},
+                #{doctorName},
+                #{diagnosisId},
+                #{userId},
+                #{createName},
+                #{transactionId},
+                #{nonceStr},
+                #{outTradeNo},
+                #{payType})
+    </insert>
+
+    <update id="update" parameterType="PaymentOrderDO">
+        update app_payment_order
+        <set>
+            <if test="payName != null">`pay_name` = #{payName
+                        },
+            </if>
+            <if test="payClass != null">`pay_class` = #{payClass
+                        },
+            </if>
+            <if test="payMoney != null">`pay_money` = #{payMoney
+                        },
+            </if>
+            <if test="status != null">`status` = #{status
+                        },
+            </if>
+            <if test="doctorId != null">`doctor_id` = #{doctorId
+                        },
+            </if>
+            <if test="doctorName != null">`doctor_name` = #{doctorName
+                        },
+            </if>
+            <if test="diagnosisId != null">`diagnosis_id` = #{diagnosisId
+                        },
+            </if>
+            <if test="userId != null">`user_id` = #{userId
+                        },
+            </if>
+            <if test="createName != null">`create_name` = #{createName
+                        },
+            </if>
+
+            <if test="transactionId != null">`transaction_id` = #{transactionId
+                        },
+            </if>
+            <if test="nonceStr != null">`nonce_str` = #{nonceStr
+                        },
+            </if>
+            <if test="payType != null">`pay_type` = #{payType
+                        },
+            </if>
+            <if test="outTradeNo != null">`out_trade_no` = #{outTradeNo
+                        }
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="remove">
+        delete
+        from app_payment_order
+        where id = #{value}
+    </delete>
+
+    <delete id="batchRemove">
+        delete from app_payment_order where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+    <select id="orderList" resultType="PaymentOrderDO">
+        select apo.id,adc.name, adc.age, adc.sex, apo.pay_name, apo.pay_class, apo.pay_money
+        from app_payment_order apo
+        inner join app_diagnosis_card adc on apo.diagnosis_id = adc.id
+        <where>
+            <if test="doctorId!=null">and doctor_id = #{doctorId}</if>
+        </where>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+    <select id="orderListCount" resultType="int">
+        select count(*)
+        from app_payment_order apo
+        inner join app_diagnosis_card adc on apo.diagnosis_id = adc.id
+        <where>
+            <if test="doctorId!=null">and doctor_id = #{doctorId}</if>
+        </where>
+    </select>
+
+
+</mapper>

@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.dao.app.ApplyServiceDao">
+
+    <select id="get" resultType="ApplyServiceDO">
+        select `id`,
+               `user_id`,
+               `as_class`,
+               `name`,
+               `age`,
+               `sex`,
+               `phone`,
+               `meet_time`,
+               `create_time`,
+               `symptom`,
+               `bed_num`,
+               reason,
+               hospital_id
+        from app_apply_service
+        where id = #{value}
+    </select>
+
+    <select id="list" resultType="ApplyServiceDO">
+        select reason,`id`,`user_id`,`as_class`,`name`,`age`,`sex`,`phone`,`meet_time`,`create_time`,`symptom`,`bed_num` ,hospital_id from
+        app_apply_service
+        <where>
+            <if test="id != null and id != ''">and id =
+                #{id}
+            </if>
+            <if test="hospitalId != null and hospitalId != ''">and hospital_d =
+                #{hospitalId}
+            </if>
+            <if test="userId != null and userId != ''">and user_id =
+                #{userId}
+            </if>
+            <if test="asClass != null and asClass != ''">and as_class =
+                #{asClass}
+            </if>
+            <if test="name != null and name != '' and name != '%%'">
+                and name like #{name}
+            </if>
+            <if test="age != null and age != ''">and age =
+                #{age}
+            </if>
+            <if test="sex != null and sex != ''">and sex =
+                #{sex}
+            </if>
+            <if test="phone != null and phone != ''">and phone =
+                #{phone}
+            </if>
+            <if test="meetTime != null and meetTime != ''">and meet_time =
+                #{meetTime}
+            </if>
+            <if test="createTime != null and createTime != ''">and create_time =
+                #{createTime}
+            </if>
+            <if test="symptom != null and symptom != ''">and symptom =
+                #{symptom}
+            </if>
+            <if test="bedNum != null and bedNum != ''">and bed_num =
+                #{bedNum}
+            </if>
+        </where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+            <otherwise>
+                order by id desc
+            </otherwise>
+        </choose>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="count" resultType="int">
+        select count(*) from app_apply_service
+        <where>
+            <if test="id != null and id != ''">and id =
+                #{id}
+            </if>
+            <if test="userId != null and userId != ''">and user_id =
+                #{userId}
+            </if>
+            <if test="hospitalId != null and hospitalId != ''">and hospital_id =
+                #{hospitalId}
+            </if>
+            <if test="asClass != null and asClass != ''">and as_class =
+                #{asClass}
+            </if>
+            <if test="name != null and name != '' and name != '%%'">
+                and name like #{name}
+            </if>
+            <if test="age != null and age != ''">and age =
+                #{age}
+            </if>
+            <if test="sex != null and sex != ''">and sex =
+                #{sex}
+            </if>
+            <if test="phone != null and phone != ''">and phone =
+                #{phone}
+            </if>
+            <if test="meetTime != null and meetTime != ''">and meet_time =
+                #{meetTime}
+            </if>
+            <if test="createTime != null and createTime != ''">and create_time =
+                #{createTime}
+            </if>
+            <if test="symptom != null and symptom != ''">and symptom =
+                #{symptom}
+            </if>
+            <if test="bedNum != null and bedNum != ''">and bed_num =
+                #{bedNum}
+            </if>
+        </where>
+    </select>
+
+    <insert id="save" parameterType="ApplyServiceDO" useGeneratedKeys="true" keyProperty="id">
+        insert into app_apply_service (`user_id`,
+                                       `as_class`,
+                                       `name`,
+                                       `age`,
+                                       `sex`,
+                                       `phone`,
+                                       `meet_time`,
+                                       `create_time`,
+                                       `symptom`,
+                                       `bed_num`,reason,hospital_id)
+        values (#{userId},
+                #{asClass},
+                #{name},
+                #{age},
+                #{sex},
+                #{phone},
+                #{meetTime},
+                #{createTime},
+                #{symptom},
+                #{bedNum},
+                       #{reason},
+                #{hospitalId})
+    </insert>
+
+    <update id="update" parameterType="ApplyServiceDO">
+        update app_apply_service
+        <set>
+            <if test="userId != null">`user_id` = #{userId
+                        },
+            </if>
+            <if test="asClass != null">`as_class` = #{asClass
+                        },
+            </if>
+            <if test="hospitalId != null">`hospital_id` = #{hospitalId
+                        },
+            </if>
+            <if test="reason != null">`reason` = #{reason
+                        },
+            </if>
+            <if test="name != null">`name` = #{name
+                        },
+            </if>
+            <if test="age != null">`age` = #{age
+                        },
+            </if>
+            <if test="sex != null">`sex` = #{sex
+                        },
+            </if>
+            <if test="phone != null">`phone` = #{phone
+                        },
+            </if>
+            <if test="meetTime != null">`meet_time` = #{meetTime
+                        },
+            </if>
+            <if test="createTime != null">`create_time` = #{createTime
+                        },
+            </if>
+            <if test="symptom != null">`symptom` = #{symptom
+                        },
+            </if>
+            <if test="bedNum != null">`bed_num` = #{bedNum
+                        }
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="remove">
+        delete
+        from app_apply_service
+        where id = #{value}
+    </delete>
+
+    <delete id="batchRemove">
+        delete from app_apply_service where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
